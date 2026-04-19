@@ -7,6 +7,7 @@ package main
 
 import (
 	"log"
+	"log/slog"
 	"os"
 
 	"project/internal/adapters/input/http"
@@ -56,13 +57,29 @@ func setupRouter() *gin.Engine {
 	service := application.NewProductService(repo)
 	handler := http.NewProductHandler(service)
 
-	r := gin.Default()
+	r := gin.New()
+	r.Use(gin.Recovery())
+	r.Use(loggingMiddleware())
 	handler.RegisterRoutes(r)
 
 	// Swagger UI
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	return r
+}
+
+// loggingMiddleware registra cada request con slog estructurado.
+func loggingMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Next()
+
+		slog.Info("request",
+			"method", c.Request.Method,
+			"path", c.Request.URL.Path,
+			"status", c.Writer.Status(),
+			"ip", c.ClientIP(),
+		)
+	}
 }
 
 func main() {

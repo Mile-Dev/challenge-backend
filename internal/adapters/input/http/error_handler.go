@@ -2,7 +2,7 @@ package http
 
 import (
 	"errors"
-	"log"
+	"log/slog"
 	"net/http"
 
 	"project/internal/domain"
@@ -21,11 +21,17 @@ type ErrorResponse struct {
 // Registra el error completo en logs internos pero solo
 // expone información segura al cliente.
 func handleError(c *gin.Context, err error) {
-	// Log interno con contexto completo — solo visible en servidor
-	log.Printf("[ERROR] %v", err)
 
 	var appErr *domain.AppError
 	if errors.As(err, &appErr) {
+
+		// Logueamos el error completo con contexto para diagnóstico interno
+		slog.Error("request error",
+			"code", appErr.Code,
+			"message", appErr.Message,
+			"path", c.Request.URL.Path,
+			"method", c.Request.Method,
+		)
 		// Al cliente solo llega el error de dominio limpio
 		// Sin contexto interno ni detalles de implementación
 		c.JSON(httpStatusFromError(appErr), ErrorResponse{
@@ -35,6 +41,12 @@ func handleError(c *gin.Context, err error) {
 		return
 	}
 
+	// Error inesperado — log con stack completo
+	slog.Error("unexpected error",
+		"error", err.Error(),
+		"path", c.Request.URL.Path,
+		"method", c.Request.Method,
+	)
 	// Error no esperado — nunca revelamos detalles internos
 	c.JSON(http.StatusInternalServerError, ErrorResponse{
 		Code:    domain.ErrInternalServer.Code,

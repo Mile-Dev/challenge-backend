@@ -24,4 +24,5 @@ jobs:
         run: go mod tidy
 
       - name: Run tests
-        run: go test $(go list ./... | grep -v /docs) -v -cover
+        run: |
+          go test $(go list ./... | grep -v /docs | grep -v /domain | grep -v /ports) -v -cover

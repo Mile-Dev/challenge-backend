@@ -1,0 +1,25 @@
+# Binarios
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Base de datos SQLite
+data/*.db
+
+# Carpeta de dependencias
+vendor/
+
+# Variables de entorno
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+
+# Go
+*.test
+*.out
+coverage.out

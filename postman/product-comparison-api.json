@@ -1,0 +1,222 @@
+{
+  "info": {
+    "name": "Product Comparison API",
+    "description": "Colección de endpoints para la API de comparación de productos de MercadoLibre",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8080/health",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["health"]
+            },
+            "description": "Verifica que el servidor está funcionando correctamente"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"status\": \"ok\",\n  \"version\": \"1.0.0\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8080/products",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["products"]
+            },
+            "description": "Retorna todos los productos disponibles"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "[\n  {\n    \"id\": \"1\",\n    \"name\": \"Samsung Galaxy S23\",\n    \"description\": \"Smartphone flagship con cámara de 50MP\",\n    \"price\": 2999999,\n    \"image_url\": \"https://example.com/samsung-s23.jpg\",\n    \"rating\": 4.5,\n    \"specifications\": {\n      \"ram\": \"8GB\",\n      \"storage\": \"128GB\",\n      \"battery\": \"3900mAh\",\n      \"screen\": \"6.1 pulgadas\"\n    }\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get Product By ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8080/products/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["products", "1"]
+            },
+            "description": "Retorna un producto específico por su ID"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"id\": \"1\",\n    \"name\": \"Samsung Galaxy S23\",\n    \"description\": \"Smartphone flagship con cámara de 50MP\",\n    \"price\": 2999999,\n    \"image_url\": \"https://example.com/samsung-s23.jpg\",\n    \"rating\": 4.5,\n    \"specifications\": {\n      \"ram\": \"8GB\",\n      \"storage\": \"128GB\",\n      \"battery\": \"3900mAh\",\n      \"screen\": \"6.1 pulgadas\"\n    }\n}"
+            },
+            {
+              "name": "Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "body": "{\n  \"code\": \"product_not_found\",\n  \"message\": \"producto no encontrado\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Product By ID - Not Found",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8080/products/999",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["products", "999"]
+            },
+            "description": "Intenta obtener un producto que no existe"
+          },
+          "response": [
+            {
+              "name": "Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "body": "{\n  \"code\": \"product_not_found\",\n  \"message\": \"producto no encontrado\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Compare Products",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8080/products/compare?ids=1,2,3",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["products", "compare"],
+              "query": [
+                {
+                  "key": "ids",
+                  "value": "1,2,3",
+                  "description": "IDs de productos a comparar separados por coma"
+                }
+              ]
+            },
+            "description": "Compara múltiples productos por sus IDs"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "[\n  {\n    \"id\": \"1\",\n    \"name\": \"Samsung Galaxy S23\"\n  },\n  {\n    \"id\": \"2\",\n    \"name\": \"iPhone 14\"\n  },\n  {\n    \"id\": \"3\",\n    \"name\": \"Xiaomi Redmi Note 12\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Compare Products - Missing Param",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8080/products/compare",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["products", "compare"]
+            },
+            "description": "Intenta comparar sin enviar el parámetro ids"
+          },
+          "response": [
+            {
+              "name": "Bad Request",
+              "status": "Bad Request",
+              "code": 400,
+              "body": "{\n  \"code\": \"invalid_input\",\n  \"message\": \"parámetros de entrada inválidos\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Compare Products - Single ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8080/products/compare?ids=1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["products", "compare"],
+              "query": [
+                {
+                  "key": "ids",
+                  "value": "1",
+                  "description": "Solo un ID — requiere mínimo 2"
+                }
+              ]
+            },
+            "description": "Intenta comparar con un solo ID"
+          },
+          "response": [
+            {
+              "name": "Bad Request",
+              "status": "Bad Request",
+              "code": 400,
+              "body": "{\n  \"code\": \"invalid_input\",\n  \"message\": \"parámetros de entrada inválidos\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Compare iPhones",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8080/products/compare?ids=2,4,5,6",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["products", "compare"],
+              "query": [
+                {
+                  "key": "ids",
+                  "value": "2,4,5,6",
+                  "description": "Compara todos los iPhones disponibles"
+                }
+              ]
+            },
+            "description": "Compara todos los modelos de iPhone disponibles"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
+  ]
+}

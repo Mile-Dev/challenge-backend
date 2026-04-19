@@ -1,0 +1,44 @@
+[
+  {
+    "id": "1",
+    "name": "Samsung Galaxy S23",
+    "description": "Smartphone flagship con cámara de 50MP",
+    "price": 2999999.00,
+    "image_url": "https://example.com/samsung-s23.jpg",
+    "rating": 4.5,
+    "specifications": {
+      "ram": "8GB",
+      "storage": "128GB",
+      "battery": "3900mAh",
+      "screen": "6.1 pulgadas"
+    }
+  },
+  {
+    "id": "2",
+    "name": "iPhone 14",
+    "description": "Smartphone Apple con chip A15 Bionic",
+    "price": 3499999.00,
+    "image_url": "https://example.com/iphone14.jpg",
+    "rating": 4.7,
+    "specifications": {
+      "ram": "6GB",
+      "storage": "128GB",
+      "battery": "3279mAh",
+      "screen": "6.1 pulgadas"
+    }
+  },
+  {
+    "id": "3",
+    "name": "Xiaomi Redmi Note 12",
+    "description": "Smartphone gama media con pantalla AMOLED",
+    "price": 999999.00,
+    "image_url": "https://example.com/redmi-note12.jpg",
+    "rating": 4.2,
+    "specifications": {
+      "ram": "6GB",
+      "storage": "128GB",
+      "battery": "5000mAh",
+      "screen": "6.67 pulgadas"
+    }
+  }
+]

@@ -1,5 +1,7 @@
 # Product Comparison API
 
+![CI Tests](https://github.com/Mile-Dev/challenge-backend/actions/workflows/test.yml/badge.svg)
+
 API RESTful desarrollada en Go para comparar artículos del catálogo.
 
 ## Arquitectura

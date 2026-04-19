@@ -1,33 +1,38 @@
 # Product Comparison API
 
-API RESTful desarrollada en Go para comparar artículos del catálogo de MercadoLibre.
+API RESTful desarrollada en Go para comparar artículos del catálogo.
 
 ## Arquitectura
 
 Este proyecto implementa **Arquitectura Hexagonal (Ports & Adapters)**, que permite
 separar la lógica de negocio de los detalles técnicos como frameworks y bases de datos.
 
-HTTP Request
-          │
-┌─────────▼──────────┐
-│   Adapter Input    │  ← Gin Handler (traduce HTTP → dominio)
-└─────────┬──────────┘
-          │
-┌─────────▼──────────┐
-│    Port Input      │  ← ProductServicePort (contrato entrada)
-└─────────┬──────────┘
-          │
-┌─────────▼──────────┐
-│    Application     │  ← ProductService (lógica de negocio pura)
-└─────────┬──────────┘
-          │
-┌─────────▼──────────┐
-│    Port Output     │  ← ProductRepositoryPort (contrato salida)
-└─────────┬──────────┘
-          │
-┌─────────▼──────────┐
-│   Adapter Output   │  ← JSON o SQLite (intercambiables)
-└────────────────────┘
+```mermaid
+graph TD
+    C[Cliente HTTP] -->|request| H[Adapter Input\nProduct Handler]
+    H -->|usa| PI[Port Input\nProductServicePort]
+    PI -->|implementa| S[Application\nProductService]
+    S -->|usa| PO[Port Output\nProductRepositoryPort]
+    PO -->|implementa| J[Adapter Output\nJSON Repository]
+    PO -->|implementa| DB[Adapter Output\nSQLite Repository]
+    J -->|lee| JF[(products.json)]
+    DB -->|lee| SF[(products.db)]
+```
+
+```mermaid
+sequenceDiagram
+    participant C as Cliente
+    participant H as Handler
+    participant S as Service
+    participant R as Repository
+
+    C->>H: GET /products/1
+    H->>S: GetProduct("1")
+    S->>R: FindByID("1")
+    R-->>S: Product
+    S-->>H: Product
+    H-->>C: 200 JSON
+```
 
 ## Arquitectura diagrama
 

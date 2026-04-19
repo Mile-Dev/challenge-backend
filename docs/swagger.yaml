@@ -1,0 +1,111 @@
+basePath: /
+definitions:
+  domain.Product:
+    properties:
+      description:
+        type: string
+      id:
+        type: string
+      image_url:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      rating:
+        type: number
+      specifications:
+        additionalProperties:
+          type: string
+        type: object
+    type: object
+  http.ErrorResponse:
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API RESTful para comparar artículos del catálogo de MercadoLibre
+  title: Product Comparison API
+  version: "1.0"
+paths:
+  /products:
+    get:
+      description: Retorna una lista completa de productos disponibles
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Product'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.ErrorResponse'
+      summary: Lista todos los productos
+      tags:
+      - products
+  /products/{id}:
+    get:
+      description: Retorna un producto específico dado su ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Product'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/http.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.ErrorResponse'
+      summary: Obtiene un producto por ID
+      tags:
+      - products
+  /products/compare:
+    get:
+      description: Retorna lista de productos para comparar dado una lista de IDs
+      parameters:
+      - description: 'IDs separados por coma (ej: 1,2,3)'
+        in: query
+        name: ids
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Product'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.ErrorResponse'
+      summary: Compara múltiples productos
+      tags:
+      - products
+swagger: "2.0"

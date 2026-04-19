@@ -15,7 +15,11 @@ import (
 	"project/internal/application"
 	"project/internal/ports/output"
 
+	_ "project/docs"
+
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // setupRepository selecciona el repositorio según variable de entorno.
@@ -54,6 +58,10 @@ func setupRouter() *gin.Engine {
 
 	r := gin.Default()
 	handler.RegisterRoutes(r)
+
+	// Swagger UI
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	return r
 }
 

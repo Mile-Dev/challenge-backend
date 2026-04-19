@@ -78,32 +78,54 @@ graph TD
 - Hexagonal pura es suficiente y más mantenible
 
 ## Estructura del proyecto
+
+```
+challenge-backend/
 ├── internal/
-│   ├── domain/                          # Entidades y errores de negocio
-│   │   └── product.go
+│   ├── domain/                          # Entidades y errores de negocio puros
+│   │   ├── product.go                   # Entidad Product
+│   │   └── errors.go                    # Errores tipados de dominio
 │   ├── ports/
 │   │   ├── input/                       # Contratos de entrada
-│   │   │   └── product_port.go
+│   │   │   └── product_port.go          # ProductServicePort
 │   │   └── output/                      # Contratos de salida
-│   │       └── product_repository_port.go
+│   │       └── product_port.go          # ProductRepositoryPort
 │   ├── application/                     # Lógica de negocio pura
-│   │   └── product_service.go
+│   │   ├── product_service.go           # Implementa ProductServicePort
+│   │   └── product_service_test.go      # Tests unitarios con mocks
 │   └── adapters/
 │       ├── input/
 │       │   └── http/                    # Adaptador HTTP (Gin)
-│       │       └── product_handler.go
+│       │       ├── product_handler.go   # Endpoints REST
+│       │       ├── error_handler.go     # Traducción errores → HTTP
+│       │       └── product_handler_test.go # Tests handler con mocks
 │       └── output/
 │           ├── json/                    # Adaptador JSON
-│           │   └── product_repository.go
+│           │   ├── product_repository.go
+│           │   └── product_repository_test.go
 │           └── sqlite/                  # Adaptador SQLite
-│               └── product_repository.go
+│               ├── product_repository.go
+│               └── product_repository_test.go
 ├── data/
 │   ├── products.json                    # Datos simulados JSON
-│   └── products.db                      # Base de datos SQLite (se genera automáticamente)
+│   └── products.db                      # SQLite (generado automáticamente)
+├── postman/
+│   └── product-comparison-api.json      # Colección Postman
 ├── main.go                              # Punto de entrada e inyección de dependencias
-├── main_test.go                         # Tests de integración
-└── internal/application/
-└── product_service_test.go          # Tests unitarios con mocks
+├── main_test.go                         # Tests de integración HTTP
+├── .gitignore
+└── README.md
+```
+
+### Responsabilidad de cada capa:
+
+| Capa | Carpeta | Responsabilidad |
+|------|---------|-----------------|
+| Domain | `internal/domain` | Entidades y errores puros sin dependencias externas |
+| Ports | `internal/ports` | Interfaces que definen contratos de entrada y salida |
+| Application | `internal/application` | Lógica de negocio pura, solo conoce el dominio |
+| Adapters Input | `internal/adapters/input` | Traduce HTTP a llamadas de dominio |
+| Adapters Output | `internal/adapters/output` | Traduce dominio a JSON o SQLite |
 
 ## Requisitos
 
